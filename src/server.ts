@@ -6,7 +6,11 @@ app.use(express.json());
 
 
 app.get("/", (req: Request, res: Response) => {
-    res.send("Welcome to Express Server");
+    // res.send("Welcome to Express Server");
+    res.status(200).json({
+        success: true,
+        messgage: "Welcome to Express Server"
+    })
 })
 
 app.listen(PORT, () => {
