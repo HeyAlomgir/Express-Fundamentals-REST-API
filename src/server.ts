@@ -17,8 +17,15 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 app.post("/", (req: Request, res: Response) => {
-    console.log(req.body);
+    // console.log(req.body);
+    const body = req.body;
+    res.status(200).json({
+        success: true,
+        message: "This is Test api!!",
+        data: body
+    })
 })
+
 
 
 
