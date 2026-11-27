@@ -57,9 +57,37 @@ app.post("/api/v1/users",async (req: Request, res: Response) => {
             success: true,
             message: "User created successfully",
             data:result.rows[0]
+
+
+
         })
-    } catch (error) {
-        console.log(error)
+    } catch (error:any) {
+        res.status(500).json({
+            success:false,
+            message:error.message,
+            error:error
+        })
+    }
+})
+
+
+// ALL data get from database
+
+app.get("/api/v1/users",async(req: Request, res: Response) => {
+    try{
+        const result = await pool.query(`
+            SELECT * FROM users`);
+            res.status(200).json({
+                success:true,
+                message:"All users data get successfully",
+                data:result.rows
+            })
+    }catch(error:any){
+        res.status(500).json({
+            success:false,
+            message:error.message,
+            error:error
+        })
     }
 })
 
