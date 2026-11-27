@@ -18,10 +18,10 @@ const pool = new Pool({
 const intDB =async()=>{
     try{
         await pool.query(`
-            CREATE TABLE users(
+            CREATE TABLE IF NOT EXISTS users(
             id SERIAL PRIMARY KEY,
             name VARCHAR(255),
-            email VARCHAR(255) NOT NULL,
+            email VARCHAR(255) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
             age INT,
             is_active BOOLEAN DEFAULT true,
@@ -44,13 +44,19 @@ app.get("/", (req: Request, res: Response) => {
     })
 })
 
-app.post("/", (req: Request, res: Response) => {
+app.post("/api/v1/users",async (req: Request, res: Response) => {
     try {
-        const body = req.body;
-        res.status(200).json({
+        
+        const {name,email,password,age} = req.body;
+
+        const result =await pool.query(`
+            INSERT INTO users(name,email,password,age) VALUES(
+            $1,$2,$3,$4) RETURNING *`,[name,email,password,age])
+            // console.log(result);
+        res.status(201).json({
             success: true,
-            message: "This is Test api!!",
-            data: body
+            message: "User created successfully",
+            data:result.rows[0]
         })
     } catch (error) {
         console.log(error)
