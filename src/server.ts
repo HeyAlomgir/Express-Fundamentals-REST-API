@@ -92,6 +92,32 @@ app.get("/api/v1/users",async(req: Request, res: Response) => {
 })
 
 
+// single data get from database
+
+app.get("/api/v1/users/:id",async(req:Request,res:Response)=>{
+    try {
+        const {id}= req.params;
+
+        const result =await pool.query(
+            `
+            SElECT * FROM users WHERE id=$1`,[id]
+        )
+        res.status(200).json({
+            success:true,
+            message:"User data get successfully",
+            data:result.rows[0]
+        })
+
+    } catch (error:any) {
+        res.status(500).json({
+            success:false,
+            message:error.message,
+            error:error
+        })
+    }
+})
+
+
 
 
 app.listen(PORT, () => {
